@@ -37,50 +37,82 @@
       box-shadow:var(--shadow);
       border:1px solid rgba(11,99,214,0.06);
     }
+    /* header centered */
     header.top{
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:12px;
+      justify-content:center;
+      flex-direction:column;
+      gap:8px;
+      margin-bottom:14px;
     }
     header.top h1{
       margin:0;
       font-size:20px;
       letter-spacing:0.2px;
+      text-align:center;
     }
     header.top p.sub{
       margin:0;
       color:var(--muted);
       font-size:13px;
+      text-align:center;
     }
+    /* centered site selector under heading */
+    .center-site {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      margin-top:8px;
+    }
+    .center-site select{
+      padding:9px 12px;
+      border-radius:8px;
+      border:1px solid #e6e9ef;
+      font-size:14px;
+      background:#fff;
+      min-width:220px;
+    }
+
     .rows-area{
-      margin-top:10px;
+      margin-top:14px;
       display:flex;
       flex-direction:column;
       gap:14px;
     }
 
-    /* single row card */
+    /* single row card - new layout:
+       row top: serial | damage | remove
+       row bottom: pallet (left) with receiving date under pallet, engineer (middle)
+    */
     .row-card{
       background: linear-gradient(180deg,#ffffff,#fbfdff);
       border-radius:10px;
       padding:12px;
       display:grid;
-      grid-template-columns: 1.2fr 1fr 1.2fr 1fr 1fr 48px;
+      grid-template-columns: 1fr 2fr 48px;
+      grid-template-rows: auto auto;
       gap:var(--gap);
       align-items:start;
       border:1px solid #eef2ff;
     }
+
+    /* second row content spans multiple columns */
+    .col-serial { grid-column: 1 / 2; grid-row: 1 / 2; }
+    .col-damage { grid-column: 2 / 3; grid-row: 1 / 2; }
+    .col-actions { grid-column: 3 / 4; grid-row: 1 / 3; display:flex; align-items:center; justify-content:center; }
+    .col-pallet { grid-column: 1 / 2; grid-row: 2 / 3; }
+    .col-date { grid-column: 2 / 3; grid-row: 2 / 3; }
+    .col-engineer { grid-column: 2 / 3; grid-row: 2 / 3; display:none; } /* keep but hide to match previous layout (JS expects input-engineer) */
+
     @media (max-width:980px){
-      .row-card{ grid-template-columns: 1fr 1fr; }
-      .row-card > .col-site { order:3; }
-      .row-card > .col-engineer { order:4; }
-      .row-card > .col-actions { order:6; grid-column: 1 / -1; justify-self:end; }
-    }
-    @media (max-width:520px){
-      .row-card{ grid-template-columns: 1fr; }
-      .row-card > .col-actions { justify-self:end; }
+      .row-card{ grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+      .col-actions { grid-column: 1 / -1; justify-self:end; }
+      .col-damage { grid-column: 1 / -1; }
+      .col-date { grid-column: 1 / -1; }
+      .col-pallet { grid-column: 1 / -1; }
+      .col-engineer { display:block; grid-column: 1 / -1; }
     }
 
     label{ font-size:12px; color:var(--muted); display:block; margin-bottom:6px; }
@@ -151,29 +183,40 @@
       width:36px;height:36px;border-radius:8px;border:0;background:#fff;display:inline-grid;place-items:center;cursor:pointer;
       box-shadow: 0 6px 14px rgba(2,6,23,0.04);
     }
+
+    /* slightly smaller paddings for cramped rows */
+    .row-card input, .row-card textarea, .row-card select { padding:8px; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="card">
       <header class="top">
-        <div>
-          <h1>Damage Module Entry — Multi-row</h1>
-          <p class="sub">Add one or more damaged modules. Each row will be saved as a separate entry in your Google Sheet.</p>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span class="pill">Sheet: DamageModules</span>
+        <h1>Damage Module Data</h1>
+        <p class="sub">Add one or more damaged modules. Each row will be saved as a separate entry in your Google Sheet.</p>
+
+        <!-- Center site selector (this is a page-level helper - JS row-level still creates own select) -->
+        <div class="center-site" aria-hidden="true">
+          <label style="display:none">Site (page)</label>
+          <select disabled>
+            <option>Site selector (use per-row Site dropdown)</option>
+          </select>
         </div>
       </header>
 
       <form id="damageForm">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+          <div style="color:var(--muted);font-size:14px">Sheet: <span class="pill">DamageModules</span></div>
+          <div>
+            <button type="button" id="addRowBtn" class="btn btn-add">+ Add Row</button>
+          </div>
+        </div>
+
         <div class="rows-area" id="rowsArea">
           <!-- rows inserted here -->
         </div>
 
         <div class="row-footer">
-          <button type="button" id="addRowBtn" class="btn btn-add">+ Add Row</button>
-
           <div class="actions-right">
             <button type="reset" id="resetBtn" class="reset-all">Reset All</button>
             <button type="submit" id="submitAllBtn" class="submit-all">Save All to Sheet</button>
@@ -213,43 +256,52 @@
       wrapper.className = 'row-card';
       wrapper.dataset.id = id;
 
-      // inner HTML with columns
+      // inner HTML with new column order:
       wrapper.innerHTML = `
         <div class="col-serial">
-          <label>Module Serial No.</label>
+          <label>Module Serial No. <span style="color:var(--danger)">*</span></label>
           <input type="text" name="serial" class="input-serial" placeholder="MOD-12345" required value="${escapeHtml(initialData.serial||'')}">
         </div>
-        <div class="col-pallet">
-          <label>Pallet No.</label>
-          <input type="text" name="pallet" class="input-pallet" placeholder="P-01" required value="${escapeHtml(initialData.pallet||'')}">
-        </div>
+
         <div class="col-damage">
           <label>Damage (kya h)</label>
           <textarea name="damage" class="input-damage" placeholder="Short description" required>${escapeHtml(initialData.damage||'')}</textarea>
         </div>
+
+        <div class="col-actions" style="grid-column: 3 / 4;">
+          <button type="button" class="icon-btn btn-remove-row" title="Remove row">🗑️</button>
+        </div>
+
+        <div class="col-pallet">
+          <label>Pallet No.</label>
+          <input type="text" name="pallet" class="input-pallet" placeholder="P-01" required value="${escapeHtml(initialData.pallet||'')}">
+        </div>
+
         <div class="col-date">
           <label>Receiving Date</label>
           <input type="date" name="receivingDate" class="input-date" required value="${escapeHtml(initialData.receivingDate||'')}">
         </div>
-        <div class="col-engineer">
+
+        <!-- kept but hidden (or shown on small screens) to keep original input-engineer presence expected by your JS -->
+        <div class="col-engineer" style="display:none">
           <label>Site Engineer Name</label>
           <input type="text" name="engineer" class="input-engineer" placeholder="e.g. Rajesh Kumar" required value="${escapeHtml(initialData.engineer||'')}">
         </div>
-        <div class="col-site">
-          <label>Site</label>
+
+        <div style="display:none">
+          <!-- keep a per-row visible site select (but hidden in this layout because we show page-level site in header).
+               If you want each row to allow changing site, remove style="display:none" -->
+          <label style="display:none">Site</label>
           <select name="site" class="input-site" required>
             ${SITE_OPTIONS.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
           </select>
-        </div>
-        <div class="col-actions" style="grid-column: 7 / 8;">
-          <button type="button" class="icon-btn btn-remove-row" title="Remove row">🗑️</button>
         </div>
       `;
 
       // set site selection if provided
       if (initialData.site) {
         const sel = wrapper.querySelector('.input-site');
-        if (SITE_OPTIONS.includes(initialData.site.toUpperCase())) sel.value = initialData.site.toUpperCase();
+        if (sel && SITE_OPTIONS.includes(initialData.site.toUpperCase())) sel.value = initialData.site.toUpperCase();
       }
 
       // hook up remove
@@ -272,7 +324,6 @@
     addRowBtn.addEventListener('click', () => {
       createRow();
       showMessage('', '');
-      // scroll to last row
       const last = rowsArea.lastElementChild;
       last.scrollIntoView({behavior:'smooth', block:'center'});
     });
@@ -300,8 +351,10 @@
         const pallet = r.querySelector('.input-pallet').value.trim();
         const damage = r.querySelector('.input-damage').value.trim();
         const receivingDate = r.querySelector('.input-date').value;
-        const engineer = r.querySelector('.input-engineer').value.trim();
-        const site = r.querySelector('.input-site').value;
+        const engineerEl = r.querySelector('.input-engineer');
+        const engineer = engineerEl ? engineerEl.value.trim() : '';
+        const siteEl = r.querySelector('.input-site');
+        const site = siteEl ? siteEl.value : SITE_OPTIONS[0];
 
         // basic validation
         if (!serial || !pallet || !damage || !receivingDate || !engineer || !site) {
