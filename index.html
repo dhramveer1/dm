@@ -4,66 +4,230 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Damage Module Entry</title>
-  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    :root{
+      --bg:#f6f8fa;
+      --card:#ffffff;
+      --accent:#0b63d6;
+      --muted:#6b7280;
+      --success:#059669;
+      --danger:#dc2626;
+      --radius:10px;
+      --shadow: 0 6px 18px rgba(15,23,42,0.08);
+    }
+    body{
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#f3f6fb 0%,var(--bg) 100%);
+      margin:0;
+      padding:28px;
+      color:#0f172a;
+    }
+    .container{
+      max-width:1000px;
+      margin:0 auto;
+    }
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+    h1{
+      margin:0 0 12px 0;
+      font-size:20px;
+      letter-spacing:0.2px;
+    }
+    p.sub{
+      margin:0 0 18px 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* Grid for form rows (five columns on wide screens) */
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width:900px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width:520px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    label{ font-size:12px; color:var(--muted); display:block; margin-bottom:6px; }
+    input[type="text"], input[type="date"], select, textarea {
+      width:100%;
+      box-sizing:border-box;
+      padding:10px 12px;
+      border-radius:8px;
+      border:1px solid #e6e9ef;
+      background:#fff;
+      font-size:14px;
+      outline:none;
+    }
+    input[disabled], textarea[disabled]{
+      background:#f3f4f6;
+      color:#9ca3af;
+    }
+
+    .row-actions{
+      margin-top:14px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    button.btn{
+      padding:10px 14px;
+      border-radius:10px;
+      border:0;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .btn-primary{ background:var(--accent); color:#fff; box-shadow: 0 6px 14px rgba(11,99,214,0.12); }
+    .btn-ghost{ background:transparent; border:1px solid #e6e9ef; color:var(--accent); }
+    .btn-success{ background:var(--success); color:white; }
+    .msg{ margin-top:12px; font-size:14px; }
+    .msg.success{ color:var(--success); }
+    .msg.error{ color:var(--danger); }
+
+    footer.small{ margin-top:16px; color:var(--muted); font-size:12px; text-align:right; }
+  </style>
 </head>
 <body>
   <div class="container">
-    <header class="header">
-      <div class="brand">
-        <img id="logoPreview" src="" alt="Company Logo" class="logo" style="display:none" />
-        <h1>Damage Module Entry</h1>
-      </div>
+    <div class="card">
+      <h1>Damage Module Entry</h1>
+      <p class="sub">Fill the form below — each submission will be saved to your Google Sheet.</p>
 
-      <div class="logo-upload">
-        <label class="small-label">Company Logo:
-          <input id="logoInput" type="file" accept="image/*" />
-        </label>
-      </div>
-    </header>
+      <!-- Form grid -->
+      <form id="damageForm">
+        <div class="grid">
+          <div>
+            <label for="serial">Module Serial No.</label>
+            <input id="serial" name="serial" type="text" placeholder="e.g. MOD-123456" required>
+          </div>
 
-    <main class="card">
-      <div id="message" class="message" role="status" aria-live="polite"></div>
+          <div>
+            <label for="pallet">Pallet No.</label>
+            <input id="pallet" name="pallet" type="text" placeholder="e.g. P-45" required>
+          </div>
 
-      <label class="field">
-        <span class="field-title">Site</span>
-        <select id="siteSelect" aria-label="Site select">
-          <option value="">-- Loading sites --</option>
-        </select>
-      </label>
+          <div>
+            <label for="damage">Damage (kya h)</label>
+            <textarea id="damage" name="damage" rows="2" placeholder="Short description of damage" required></textarea>
+          </div>
 
-      <label class="field">
-        <span class="field-title">Pallet Number</span>
-        <input id="palletInput" type="text" placeholder="Enter pallet number" />
-      </label>
+          <div>
+            <label for="receivingDate">Receiving Date</label>
+            <input id="receivingDate" name="receivingDate" type="date" required>
+          </div>
 
-      <div id="modulesContainer" aria-live="polite">
-        <!-- module rows added here -->
-      </div>
+          <div>
+            <label for="engineer">Site Engineer Name</label>
+            <input id="engineer" name="engineer" type="text" placeholder="e.g. Rajesh Kumar" required>
+          </div>
+        </div>
 
-      <div class="row-actions">
-        <button id="addRowBtn" class="btn">Add Row</button>
-        <button id="clearRowsBtn" class="btn secondary">Clear Rows</button>
-      </div>
+        <div class="row-actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">Save to Sheet</button>
+          <button type="button" class="btn btn-ghost" id="clearBtn">Clear</button>
+          <button type="button" class="btn btn-success" id="addMoreBtn" style="display:none">Add more modules</button>
+        </div>
 
-      <label class="field">
-        <span class="field-title">Site Engineer Name</span>
-        <input id="engineerName" type="text" placeholder="Enter engineer name" />
-      </label>
+        <div id="message" class="msg" aria-live="polite"></div>
+      </form>
 
-      <div class="submit-wrap">
-        <button id="submitBtn" class="btn primary">Submit</button>
-      </div>
-    </main>
-
-    <footer class="footer">
-      <small>All data will be saved to Sheet1 (columns as specified).</small>
-    </footer>
+      <footer class="small">Make sure your Google Apps Script web app URL is set in the script. Uses form-encoded POST to avoid CORS preflight issues.</footer>
+    </div>
   </div>
 
-  <script>
-    // <-- REPLACE if you ever redeploy to another URL
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyGuUx2wv6hMVi8sKDvXL6ehVxbGtCNk_JQLbE2JN6F0PBmP3Y7Iu62_ySqChU6wyk/exec";
-  </script>
-  <script src="assets/script.js"></script>
+<script>
+  // TODO: replace this with your deployed Google Apps Script web app URL
+  const POST_URL = "PASTE_YOUR_DEPLOYED_WEBAPP_URL_HERE"; // e.g. "https://script.google.com/macros/s/AKfycbyGuUx2wv6hMVi8sKDvXL6ehVxbGtCNk_JQLbE2JN6F0PBmP3Y7Iu62_ySqChU6wyk/exec"
+
+  const form = document.getElementById('damageForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const addMoreBtn = document.getElementById('addMoreBtn');
+  const messageEl = document.getElementById('message');
+
+  function setMsg(text, type){
+    messageEl.textContent = text;
+    messageEl.className = 'msg ' + (type || '');
+  }
+
+  clearBtn.addEventListener('click', () => {
+    form.reset();
+    setMsg('', '');
+  });
+
+  addMoreBtn.addEventListener('click', () => {
+    form.reset();
+    // enable form fields
+    Array.from(form.elements).forEach(el => el.disabled = false);
+    submitBtn.style.display = '';
+    addMoreBtn.style.display = 'none';
+    setMsg('', '');
+  });
+
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    setMsg('', '');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Saving...';
+
+    // gather values
+    const data = {
+      serial: document.getElementById('serial').value.trim(),
+      pallet: document.getElementById('pallet').value.trim(),
+      damage: document.getElementById('damage').value.trim(),
+      receivingDate: document.getElementById('receivingDate').value,
+      engineer: document.getElementById('engineer').value.trim()
+    };
+
+    // basic client validation
+    if(!data.serial || !data.pallet || !data.damage || !data.receivingDate || !data.engineer){
+      setMsg('Please fill all fields.', 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Save to Sheet';
+      return;
+    }
+
+    try {
+      // Send as application/x-www-form-urlencoded to avoid preflight OPTIONS
+      const body = new URLSearchParams(data).toString();
+
+      const resp = await fetch(POST_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: body,
+        mode: 'cors'
+      });
+
+      const json = await resp.json();
+
+      if (json && json.status === 'success') {
+        setMsg('Saved to sheet ✅', 'success');
+        // disable form to prevent duplicate submission
+        Array.from(form.elements).forEach(el => el.disabled = true);
+        submitBtn.style.display = 'none';
+        addMoreBtn.style.display = '';
+      } else {
+        setMsg('Error saving: ' + (json && json.message ? json.message : 'unknown error'), 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save to Sheet';
+      }
+    } catch (err) {
+      console.error(err);
+      setMsg('Network or server error: ' + err.message, 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Save to Sheet';
+    }
+  });
+</script>
 </body>
 </html>
