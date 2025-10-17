@@ -13,7 +13,7 @@
       --success:#059669;
       --danger:#dc2626;
       --radius:10px;
-      --shadow: 0 6px 18px rgba(15,23,42,0.08);
+      --shadow:0 6px 18px rgba(15,23,42,0.08);
     }
     body{
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -29,12 +29,12 @@
     .card{
       background:var(--card);
       border-radius:var(--radius);
-      padding:18px;
+      padding:20px;
       box-shadow:var(--shadow);
     }
     h1{
       margin:0 0 12px 0;
-      font-size:20px;
+      font-size:22px;
       letter-spacing:0.2px;
     }
     p.sub{
@@ -42,192 +42,151 @@
       color:var(--muted);
       font-size:13px;
     }
-
-    /* Grid for form rows (five columns on wide screens) */
     .grid{
       display:grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-      gap:10px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap:12px;
     }
-    @media (max-width:900px){
-      .grid{ grid-template-columns: 1fr 1fr; }
+    label{
+      font-size:13px;
+      color:var(--muted);
+      display:block;
+      margin-bottom:4px;
     }
-    @media (max-width:520px){
-      .grid{ grid-template-columns: 1fr; }
-    }
-
-    label{ font-size:12px; color:var(--muted); display:block; margin-bottom:6px; }
-    input[type="text"], input[type="date"], select, textarea {
+    input, textarea{
       width:100%;
       box-sizing:border-box;
       padding:10px 12px;
       border-radius:8px;
       border:1px solid #e6e9ef;
-      background:#fff;
       font-size:14px;
       outline:none;
+      background:#fff;
     }
-    input[disabled], textarea[disabled]{
-      background:#f3f4f6;
-      color:#9ca3af;
-    }
-
+    textarea{ resize:vertical; min-height:38px; }
     .row-actions{
-      margin-top:14px;
+      margin-top:18px;
       display:flex;
       gap:10px;
       align-items:center;
     }
-    button.btn{
-      padding:10px 14px;
-      border-radius:10px;
+    button{
+      padding:10px 16px;
+      border-radius:8px;
       border:0;
       cursor:pointer;
       font-weight:600;
     }
-    .btn-primary{ background:var(--accent); color:#fff; box-shadow: 0 6px 14px rgba(11,99,214,0.12); }
-    .btn-ghost{ background:transparent; border:1px solid #e6e9ef; color:var(--accent); }
+    .btn-primary{ background:var(--accent); color:#fff; }
+    .btn-secondary{ background:#e5e7eb; color:#374151; }
     .btn-success{ background:var(--success); color:white; }
     .msg{ margin-top:12px; font-size:14px; }
     .msg.success{ color:var(--success); }
     .msg.error{ color:var(--danger); }
-
-    footer.small{ margin-top:16px; color:var(--muted); font-size:12px; text-align:right; }
+    footer{
+      margin-top:12px;
+      text-align:right;
+      color:var(--muted);
+      font-size:12px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="card">
-      <h1>Damage Module Entry</h1>
-      <p class="sub">Fill the form below — each submission will be saved to your Google Sheet.</p>
+      <h1>Damage Module Entry Form</h1>
+      <p class="sub">Fill in the damage details below — data will be written to your Google Sheet automatically.</p>
 
-      <!-- Form grid -->
       <form id="damageForm">
         <div class="grid">
           <div>
             <label for="serial">Module Serial No.</label>
-            <input id="serial" name="serial" type="text" placeholder="e.g. MOD-123456" required>
+            <input type="text" id="serial" name="serial" placeholder="e.g. MOD-12345" required>
           </div>
-
           <div>
             <label for="pallet">Pallet No.</label>
-            <input id="pallet" name="pallet" type="text" placeholder="e.g. P-45" required>
+            <input type="text" id="pallet" name="pallet" placeholder="e.g. P-01" required>
           </div>
-
           <div>
             <label for="damage">Damage (kya h)</label>
-            <textarea id="damage" name="damage" rows="2" placeholder="Short description of damage" required></textarea>
+            <textarea id="damage" name="damage" placeholder="Describe the issue" required></textarea>
           </div>
-
           <div>
             <label for="receivingDate">Receiving Date</label>
-            <input id="receivingDate" name="receivingDate" type="date" required>
+            <input type="date" id="receivingDate" name="receivingDate" required>
           </div>
-
           <div>
             <label for="engineer">Site Engineer Name</label>
-            <input id="engineer" name="engineer" type="text" placeholder="e.g. Rajesh Kumar" required>
+            <input type="text" id="engineer" name="engineer" placeholder="e.g. Rajesh Kumar" required>
           </div>
         </div>
 
         <div class="row-actions">
-          <button type="submit" class="btn btn-primary" id="submitBtn">Save to Sheet</button>
-          <button type="button" class="btn btn-ghost" id="clearBtn">Clear</button>
-          <button type="button" class="btn btn-success" id="addMoreBtn" style="display:none">Add more modules</button>
+          <button type="submit" class="btn-primary" id="submitBtn">Submit</button>
+          <button type="reset" class="btn-secondary">Clear</button>
+          <button type="button" class="btn-success" id="addMoreBtn" style="display:none">Add More Modules</button>
         </div>
 
-        <div id="message" class="msg" aria-live="polite"></div>
+        <div id="message" class="msg"></div>
       </form>
 
-      <footer class="small">Make sure your Google Apps Script web app URL is set in the script. Uses form-encoded POST to avoid CORS preflight issues.</footer>
+      <footer>Powered by Google Apps Script + Sheets</footer>
     </div>
   </div>
 
-<script>
-  // TODO: replace this with your deployed Google Apps Script web app URL
-  const POST_URL = "PASTE_YOUR_DEPLOYED_WEBAPP_URL_HERE"; // e.g. "https://script.google.com/macros/s/AKfycbyGuUx2wv6hMVi8sKDvXL6ehVxbGtCNk_JQLbE2JN6F0PBmP3Y7Iu62_ySqChU6wyk/exec"
+  <script>
+    // 🔗 Replace this with your Google Apps Script Web App URL
+    const POST_URL = "https://script.google.com/macros/s/AKfycbzA4srMQGjKy3aefxdq6nXzCnypuG9AdXAVZdmoT5cA7eoIloiS8SerpGmAxuVbmgBDxA/exec";
 
-  const form = document.getElementById('damageForm');
-  const submitBtn = document.getElementById('submitBtn');
-  const clearBtn = document.getElementById('clearBtn');
-  const addMoreBtn = document.getElementById('addMoreBtn');
-  const messageEl = document.getElementById('message');
+    const form = document.getElementById('damageForm');
+    const msg = document.getElementById('message');
+    const submitBtn = document.getElementById('submitBtn');
+    const addMoreBtn = document.getElementById('addMoreBtn');
 
-  function setMsg(text, type){
-    messageEl.textContent = text;
-    messageEl.className = 'msg ' + (type || '');
-  }
-
-  clearBtn.addEventListener('click', () => {
-    form.reset();
-    setMsg('', '');
-  });
-
-  addMoreBtn.addEventListener('click', () => {
-    form.reset();
-    // enable form fields
-    Array.from(form.elements).forEach(el => el.disabled = false);
-    submitBtn.style.display = '';
-    addMoreBtn.style.display = 'none';
-    setMsg('', '');
-  });
-
-  form.addEventListener('submit', async (ev) => {
-    ev.preventDefault();
-    setMsg('', '');
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Saving...';
-
-    // gather values
-    const data = {
-      serial: document.getElementById('serial').value.trim(),
-      pallet: document.getElementById('pallet').value.trim(),
-      damage: document.getElementById('damage').value.trim(),
-      receivingDate: document.getElementById('receivingDate').value,
-      engineer: document.getElementById('engineer').value.trim()
-    };
-
-    // basic client validation
-    if(!data.serial || !data.pallet || !data.damage || !data.receivingDate || !data.engineer){
-      setMsg('Please fill all fields.', 'error');
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Save to Sheet';
-      return;
+    function showMsg(text, type){
+      msg.textContent = text;
+      msg.className = 'msg ' + type;
     }
 
-    try {
-      // Send as application/x-www-form-urlencoded to avoid preflight OPTIONS
-      const body = new URLSearchParams(data).toString();
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showMsg('');
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Saving...";
 
-      const resp = await fetch(POST_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-        },
-        body: body,
-        mode: 'cors'
-      });
+      const formData = new URLSearchParams(new FormData(form)).toString();
 
-      const json = await resp.json();
+      try {
+        const res = await fetch(POST_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData
+        });
 
-      if (json && json.status === 'success') {
-        setMsg('Saved to sheet ✅', 'success');
-        // disable form to prevent duplicate submission
-        Array.from(form.elements).forEach(el => el.disabled = true);
-        submitBtn.style.display = 'none';
-        addMoreBtn.style.display = '';
-      } else {
-        setMsg('Error saving: ' + (json && json.message ? json.message : 'unknown error'), 'error');
+        const json = await res.json();
+        if(json.status === "success"){
+          showMsg("✅ Data saved successfully!", "success");
+          Array.from(form.elements).forEach(el => el.disabled = true);
+          submitBtn.style.display = "none";
+          addMoreBtn.style.display = "inline-block";
+        } else {
+          showMsg("⚠️ Error: " + (json.message || "Unknown error"), "error");
+        }
+      } catch (err){
+        showMsg("❌ Network error: " + err.message, "error");
+      } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Save to Sheet';
+        submitBtn.textContent = "Submit";
       }
-    } catch (err) {
-      console.error(err);
-      setMsg('Network or server error: ' + err.message, 'error');
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Save to Sheet';
-    }
-  });
-</script>
+    });
+
+    addMoreBtn.addEventListener('click', () => {
+      Array.from(form.elements).forEach(el => el.disabled = false);
+      form.reset();
+      showMsg('');
+      submitBtn.style.display = "inline-block";
+      addMoreBtn.style.display = "none";
+    });
+  </script>
 </body>
 </html>
