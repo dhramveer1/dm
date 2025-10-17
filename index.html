@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Damage Module Entry</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <img id="logoPreview" src="" alt="Company Logo" class="logo" style="display:none" />
+        <h1>Damage Module Entry</h1>
+      </div>
+
+      <div class="logo-upload">
+        <label class="small-label">Company Logo:
+          <input id="logoInput" type="file" accept="image/*" />
+        </label>
+      </div>
+    </header>
+
+    <main class="card">
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+
+      <label class="field">
+        <span class="field-title">Site</span>
+        <select id="siteSelect" aria-label="Site select">
+          <option value="">-- Loading sites --</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span class="field-title">Pallet Number</span>
+        <input id="palletInput" type="text" placeholder="Enter pallet number" />
+      </label>
+
+      <div id="modulesContainer" aria-live="polite">
+        <!-- module rows added here -->
+      </div>
+
+      <div class="row-actions">
+        <button id="addRowBtn" class="btn">Add Row</button>
+        <button id="clearRowsBtn" class="btn secondary">Clear Rows</button>
+      </div>
+
+      <label class="field">
+        <span class="field-title">Site Engineer Name</span>
+        <input id="engineerName" type="text" placeholder="Enter engineer name" />
+      </label>
+
+      <div class="submit-wrap">
+        <button id="submitBtn" class="btn primary">Submit</button>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <small>All data will be saved to Sheet1 (columns as specified).</small>
+    </footer>
+  </div>
+
+  <script>
+    // <-- REPLACE if you ever redeploy to another URL
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyGuUx2wv6hMVi8sKDvXL6ehVxbGtCNk_JQLbE2JN6F0PBmP3Y7Iu62_ySqChU6wyk/exec";
+  </script>
+  <script src="assets/script.js"></script>
+</body>
+</html>
