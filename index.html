@@ -15,7 +15,6 @@
       --danger:#dc2626;
       --radius:12px;
       --shadow: 0 8px 30px rgba(15,23,42,0.06);
-      --gap:12px;
     }
     *{box-sizing:border-box}
     body{
@@ -25,11 +24,7 @@
       padding:28px;
       color:#0f172a;
     }
-    .container{
-      max-width:980px;
-      margin:0 auto;
-      padding:6px;
-    }
+    .container{max-width:980px;margin:0 auto;padding:6px;}
     .card{
       background:var(--card);
       border-radius:14px;
@@ -37,95 +32,37 @@
       box-shadow:var(--shadow);
       border:1px solid rgba(11,99,214,0.04);
     }
-
-    .header{
-      display:flex;
-      gap:14px;
-      align-items:center;
-    }
-    .logo{
-      width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:800;
-      font-size:18px;
-    }
-    h1{ margin:0; font-size:18px; }
-    p.lead { margin:6px 0 0 0; color:var(--muted); font-size:13px; }
-
-    /* main form layout */
-    .section{ margin-top:18px; }
-    label{ font-size:13px; color:var(--accent); font-weight:700; display:block; margin-bottom:8px; }
-    .hint { font-size:13px; color:var(--muted); margin-top:6px; }
-
-    select, input[type="text"], input[type="date"], textarea {
+    .header{display:flex;gap:14px;align-items:center;}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:18px;}
+    h1{margin:0;font-size:18px;}
+    p.lead{margin:6px 0 0;color:var(--muted);font-size:13px;}
+    label{font-size:13px;color:var(--accent);font-weight:700;display:block;margin-bottom:8px;}
+    select, input, textarea{
       width:100%;
       padding:10px 12px;
       border-radius:10px;
       border:1px solid #e6e9ef;
       font-size:14px;
       background:#fff;
-      outline:none;
     }
-    textarea { min-height:86px; resize:vertical; }
-
-    /* module serial area */
-    .module-area {
-      background:#fbfdff;
-      border-radius:10px;
-      padding:12px;
-      border:1px solid #eef2ff;
-    }
-    .module-controls{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:12px;
-    }
-    .module-controls .left { display:flex; gap:8px; align-items:center; }
-    .btn {
-      padding:8px 12px; border-radius:10px; border:0; cursor:pointer; font-weight:700;
-    }
-    .btn-add { background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:white; }
-    .btn-remove { background:#fff; border:1px solid #e5e7eb; color:#374151; }
-    .btn-small { padding:6px 10px; border-radius:8px; font-weight:600; }
-
-    .rows-list { display:flex; flex-direction:column; gap:10px; }
-    .row-item {
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      border-radius:10px;
-      padding:10px;
-      background:white;
-      border:1px solid #eef2ff;
-    }
-    .row-item input[type="text"], .row-item textarea { font-size:14px; }
-    .row-left { flex: 1 1 40%; display:flex; flex-direction:column; gap:6px; }
-    .row-mid  { flex: 1 1 50%; display:flex; flex-direction:column; gap:6px; }
-    .row-right { width:48px; display:flex; align-items:flex-start; justify-content:center; }
-
-    .row-count { color:var(--muted); font-size:13px; }
-
-    /* pallet/invoice/date/engineer grid */
-    .two-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px; }
-    @media (max-width:720px) { .two-grid { grid-template-columns: 1fr; } }
-
-    .actions {
-      display:flex;
-      gap:12px;
-      margin-top:18px;
-      align-items:center;
-    }
-    .submit { background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:white; padding:10px 16px; border-radius:10px; border:0; font-weight:700; }
-    .reset  { background:#fff; border:1px solid #e5e7eb; color:#374151; padding:9px 14px; border-radius:10px; font-weight:700; }
-
-    .msg{ margin-top:10px; font-size:14px; color:var(--muted); }
-    .msg.error{ color:var(--danger); font-weight:700; }
-    .msg.success{ color:var(--success); font-weight:700; }
-
-    .footer-note { margin-top:14px; color:var(--muted); font-size:13px; }
-
-    /* icon button */
-    .icon-btn{ width:38px;height:38px;border-radius:8px;border:0;background:#fff;display:inline-grid;place-items:center;cursor:pointer;box-shadow:0 6px 14px rgba(2,6,23,0.04); }
+    textarea{min-height:80px;resize:vertical;}
+    .module-area{background:#fbfdff;border-radius:10px;padding:12px;border:1px solid #eef2ff;margin-top:14px;}
+    .module-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+    .btn{padding:8px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:700;}
+    .btn-add{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;}
+    .btn-remove{background:#fff;border:1px solid #e5e7eb;}
+    .row-item{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:10px;background:white;border:1px solid #eef2ff;}
+    .row-left{flex:1;}
+    .row-mid{flex:1;}
+    .icon-btn{width:38px;height:38px;border-radius:8px;border:0;background:#fff;display:inline-grid;place-items:center;cursor:pointer;box-shadow:0 6px 14px rgba(2,6,23,0.04);}
+    .two-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+    @media(max-width:720px){.two-grid{grid-template-columns:1fr;}}
+    .actions{display:flex;gap:12px;margin-top:18px;align-items:center;}
+    .submit{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;padding:10px 16px;border-radius:10px;border:0;font-weight:700;}
+    .reset{background:#fff;border:1px solid #e5e7eb;color:#374151;padding:9px 14px;border-radius:10px;font-weight:700;}
+    .msg{margin-top:10px;font-size:14px;color:var(--muted);}
+    .msg.error{color:var(--danger);}
+    .msg.success{color:var(--success);}
   </style>
 </head>
 <body>
@@ -140,91 +77,71 @@
       </div>
 
       <form id="damageForm">
-        <!-- 1) choose site -->
-        <div class="section">
+        <!-- Choose Site -->
+        <div style="margin-top:18px;">
           <label>1) Choose Site (sheet)</label>
-          <select id="pageSite" aria-label="Choose site">
-            <!-- options filled by JS -->
-          </select>
-          <div class="hint">Choose the sheet name that corresponds to the site (the Google Sheet must have a tab with the same name). If tab does not exist, the script will create it automatically.</div>
+          <select id="pageSite"></select>
         </div>
 
-        <!-- 2) module serial numbers area -->
-        <div class="section module-area">
+        <!-- Module Serial Area -->
+        <div class="module-area">
           <div class="module-controls">
-            <div class="left">
-              <div style="font-weight:700;color:var(--accent)">2) Module serial numbers & reason (max 10 rows)</div>
-              <div class="row-count" id="rowCount">Rows: 0/10</div>
-            </div>
-            <div class="right">
-              <button type="button" id="addRowBtn" class="btn btn-add btn-small">+ Add row</button>
-              <button type="button" id="removeLastBtn" class="btn btn-remove btn-small">− Remove last</button>
+            <div style="font-weight:700;color:var(--accent)">2) Module serial numbers & reason (max 10 rows)</div>
+            <div>
+              <button type="button" id="addRowBtn" class="btn btn-add">+ Add row</button>
+              <button type="button" id="removeLastBtn" class="btn btn-remove">− Remove last</button>
             </div>
           </div>
-
-          <div class="rows-list" id="rowsList">
-            <!-- rows go here -->
-          </div>
+          <div id="rowsList"></div>
         </div>
 
-        <!-- 3) pallet no -->
-        <div class="section">
+        <!-- Pallet -->
+        <div style="margin-top:18px;">
           <label>3) Pallet No. (from which broken modules received)</label>
-          <input type="text" id="palletNo" name="pallet" placeholder="e.g. PLT-2025-001">
+          <input type="text" id="palletNo" placeholder="e.g. PLT-2025-001">
         </div>
 
-        <!-- 4) invoice / challan -->
-        <div class="section">
+        <!-- Invoice -->
+        <div style="margin-top:18px;">
           <label>4) Invoice / Delivery Challan No. (pallet)</label>
-          <input type="text" id="invoiceNo" name="invoice" placeholder="e.g. INV-45987">
+          <input type="text" id="invoiceNo" placeholder="e.g. INV-45987">
         </div>
 
-        <!-- 5) date & inspector -->
-        <div class="section two-grid">
+        <!-- Date / Engineer -->
+        <div class="two-grid">
           <div>
             <label>5) Date of received modules</label>
-            <input type="date" id="receivingDate" name="receivingDate">
-            <div class="hint">Select the exact date the pallet arrived on site.</div>
+            <input type="date" id="receivingDate">
           </div>
           <div>
             <label>Inspected by (site engineer)</label>
-            <input type="text" id="engineer" name="engineer" placeholder="Site Engineer name">
+            <input type="text" id="engineer" placeholder="Site Engineer name">
           </div>
         </div>
 
-        <!-- notes -->
-        <div class="section">
+        <!-- Notes -->
+        <div style="margin-top:18px;">
           <label>Additional notes (optional)</label>
-          <textarea id="notes" name="notes" placeholder="e.g. packaging damaged, photos attached, etc."></textarea>
+          <textarea id="notes" placeholder="e.g. packaging damaged, photos attached, etc."></textarea>
         </div>
 
         <div class="actions">
           <button type="submit" class="submit">Submit to Sheet</button>
           <button type="button" id="resetBtn" class="reset">Reset</button>
         </div>
-
         <div id="message" class="msg"></div>
-        <div class="footer-note">Powered by Google Apps Script + Sheets — per-row site restricted to provided list.</div>
       </form>
     </div>
   </div>
 
   <script>
-    // -------------------------
-    // IMPORTANT: kept these names & constants as-is
-    // -------------------------
     const POST_URL = "https://script.google.com/macros/s/AKfycbzA4srMQGjKy3aefxdq6nXzCnypuG9AdXAVZdmoT5cA7eoIloiS8SerpGmAxuVbmgBDxA/exec";
     const SITE_OPTIONS = ["TOLASAR","MALSAR","BHOJASAR","GIRGHICHIYA","SUMERIYA","BILLYUBAS","SAWAR","NETHRANA"];
 
-    // storage key (local)
-    const STORAGE_KEY = 'dm_rows_v1';
-
-    // elements
     const pageSite = document.getElementById('pageSite');
     const rowsList = document.getElementById('rowsList');
     const addRowBtn = document.getElementById('addRowBtn');
     const removeLastBtn = document.getElementById('removeLastBtn');
-    const rowCountEl = document.getElementById('rowCount');
     const palletNo = document.getElementById('palletNo');
     const invoiceNo = document.getElementById('invoiceNo');
     const receivingDate = document.getElementById('receivingDate');
@@ -232,265 +149,68 @@
     const notes = document.getElementById('notes');
     const messageEl = document.getElementById('message');
     const resetBtn = document.getElementById('resetBtn');
-    const damageForm = document.getElementById('damageForm');
 
-    // initialize site options
-    function fillSiteOptions() {
-      pageSite.innerHTML = SITE_OPTIONS.map(s => `<option value="${s}">${s[0].toUpperCase()+s.slice(1).toLowerCase()}</option>`).join('');
-    }
-    fillSiteOptions();
+    pageSite.innerHTML = SITE_OPTIONS.map(s => `<option value="${s}">${s}</option>`).join('');
 
-    // helpers for persistence
-    function saveState() {
-      const rowsData = Array.from(rowsList.children).map(node => {
-        return {
-          serial: node.querySelector('.input-serial').value.trim(),
-          damage: node.querySelector('.input-damage').value.trim(),
-          site: node.querySelector('.input-site').value
-        };
-      });
-      const payload = {
-        pageSite: pageSite.value,
-        rows: rowsData,
-        pallet: palletNo.value.trim(),
-        invoice: invoiceNo.value.trim(),
-        receivingDate: receivingDate.value,
-        engineer: engineer.value.trim(),
-        notes: notes.value.trim()
-      };
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-      } catch (e) {
-        console.warn('Could not save to localStorage', e);
-      }
-    }
+    function showMessage(txt,type=''){messageEl.textContent=txt;messageEl.className='msg '+type;}
 
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return null;
-        return JSON.parse(raw);
-      } catch (e) {
-        console.warn('Failed to parse saved state', e);
-        return null;
-      }
-    }
-
-    function clearState() {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-
-    // row management (max 10)
-    function updateRowCount() {
-      const c = rowsList.children.length;
-      rowCountEl.textContent = `Rows: ${c}/10`;
-      // disable add when 10
-      addRowBtn.disabled = c >= 10;
-      removeLastBtn.disabled = c === 0;
-    }
-
-    function createRow(initial = {}) {
-      if (rowsList.children.length >= 10) return null;
-      const item = document.createElement('div');
-      item.className = 'row-item';
-
-      item.innerHTML = `
+    function createRow(serial='',damage=''){
+      const div=document.createElement('div');
+      div.className='row-item';
+      div.innerHTML=`
         <div class="row-left">
-          <label style="font-size:12px;color:var(--muted);font-weight:600">Module Serial No. <span style="color:var(--danger)">*</span></label>
-          <input type="text" name="serial" class="input-serial" placeholder="e.g. MOD-12345" required value="${escapeHtml(initial.serial||'')}">
+          <label style="font-size:12px;color:var(--muted)">Module Serial No.</label>
+          <input type="text" class="input-serial" placeholder="MOD-12345" value="${serial}">
         </div>
         <div class="row-mid">
-          <label style="font-size:12px;color:var(--muted);font-weight:600">Damage / Reason</label>
-          <textarea name="damage" class="input-damage" placeholder="Short description" required>${escapeHtml(initial.damage||'')}</textarea>
-          <div style="margin-top:6px;display:flex;gap:8px;align-items:center;">
-            <label style="font-size:12px;color:var(--muted);margin:0">Site</label>
-            <select name="site" class="input-site" style="min-width:160px">
-              ${SITE_OPTIONS.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
-            </select>
-          </div>
+          <label style="font-size:12px;color:var(--muted)">Damage / Reason</label>
+          <textarea class="input-damage" placeholder="Short description">${damage}</textarea>
         </div>
-        <div class="row-right">
-          <button type="button" class="icon-btn btn-remove" title="Remove this row">🗑️</button>
-        </div>
+        <button type="button" class="icon-btn btn-remove">🗑️</button>
       `;
-
-      // set site if provided
-      const sel = item.querySelector('.input-site');
-      if (initial.site && SITE_OPTIONS.includes(initial.site.toUpperCase())) sel.value = initial.site.toUpperCase();
-
-      // hook events
-      item.querySelector('.btn-remove').addEventListener('click', () => {
-        item.remove();
-        updateRowCount();
-        saveState();
-      });
-      // save when inputs change
-      item.querySelector('.input-serial').addEventListener('input', saveState);
-      item.querySelector('.input-damage').addEventListener('input', saveState);
-      sel.addEventListener('change', saveState);
-
-      rowsList.appendChild(item);
-      updateRowCount();
-      saveState();
-      return item;
+      div.querySelector('.btn-remove').onclick=()=>{div.remove();};
+      rowsList.appendChild(div);
     }
 
-    function removeLast() {
-      const last = rowsList.lastElementChild;
-      if (last) {
-        last.remove();
-        updateRowCount();
-        saveState();
-      }
-    }
+    addRowBtn.onclick=()=>{createRow();};
+    removeLastBtn.onclick=()=>{rowsList.lastElementChild?.remove();};
+    createRow(); // initial row
 
-    addRowBtn.addEventListener('click', () => {
-      createRow();
-    });
-    removeLastBtn.addEventListener('click', () => {
-      removeLast();
-    });
+    resetBtn.onclick=()=>{
+      if(!confirm('Clear all fields?'))return;
+      rowsList.innerHTML='';createRow();
+      palletNo.value=invoiceNo.value=receivingDate.value=engineer.value=notes.value='';
+      showMessage('');
+    };
 
-    // helpers
-    function escapeHtml(str) {
-      return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-    }
-
-    // load saved rows on start
-    (function initFromStorage(){
-      const state = loadState();
-      if (state) {
-        if (state.pageSite) pageSite.value = state.pageSite;
-        if (state.pallet) palletNo.value = state.pallet;
-        if (state.invoice) invoiceNo.value = state.invoice;
-        if (state.receivingDate) receivingDate.value = state.receivingDate;
-        if (state.engineer) engineer.value = state.engineer;
-        if (state.notes) notes.value = state.notes;
-        if (Array.isArray(state.rows) && state.rows.length) {
-          for (const r of state.rows.slice(0,10)) createRow(r);
-        } else {
-          // at least one blank row should exist
-          createRow();
-        }
-      } else {
-        createRow();
-      }
-    })();
-
-    // save page-level inputs periodically / on change
-    [pageSite, palletNo, invoiceNo, receivingDate, engineer, notes].forEach(el => {
-      el.addEventListener('input', saveState);
-      el.addEventListener('change', saveState);
-    });
-
-    // Reset button behavior: clear form & local storage but keep one blank row
-    resetBtn.addEventListener('click', () => {
-      if (!confirm('Clear all saved rows and reset the form?')) return;
-      rowsList.innerHTML = '';
-      pageSite.selectedIndex = 0;
-      palletNo.value = '';
-      invoiceNo.value = '';
-      receivingDate.value = '';
-      engineer.value = '';
-      notes.value = '';
-      clearState();
-      createRow();
-      showMessage('', '');
-    });
-
-    // message helper
-    function showMessage(txt, type='') {
-      messageEl.textContent = txt;
-      messageEl.className = type ? `msg ${type}` : 'msg';
-    }
-
-    // Submit: send each row to POST_URL sequentially (keeps original payload fields)
-    damageForm.addEventListener('submit', async function(e){
+    document.getElementById('damageForm').onsubmit=async e=>{
       e.preventDefault();
-      showMessage('', '');
-      // collect rows
-      const rows = Array.from(rowsList.children).map(node => {
-        return {
-          serial: node.querySelector('.input-serial').value.trim(),
-          damage: node.querySelector('.input-damage').value.trim(),
-          site: node.querySelector('.input-site').value
-        };
-      });
+      const site=pageSite.value;
+      const rows=Array.from(rowsList.children).map(r=>({
+        serial:r.querySelector('.input-serial').value.trim(),
+        damage:r.querySelector('.input-damage').value.trim()
+      })).filter(r=>r.serial&&r.damage);
 
-      // basic validations
-      if (!rows.length) { showMessage('Add at least one module row before submitting.', 'error'); return; }
-      for (const r of rows) {
-        if (!r.serial || !r.damage) { showMessage('Please fill serial and damage for every row.', 'error'); return; }
-        if (!SITE_OPTIONS.includes(r.site)) { showMessage('Invalid site found in a row.', 'error'); return; }
-      }
-      // pallet/invoice/date/engineer validations (basic)
-      if (!palletNo.value.trim()) { showMessage('Pallet No. is required.', 'error'); return; }
-      if (!receivingDate.value) { showMessage('Receiving date is required.', 'error'); return; }
-      if (!engineer.value.trim()) { showMessage('Inspector name is required.', 'error'); return; }
+      if(!rows.length)return showMessage('Please fill module serials & reasons.','error');
+      if(!palletNo.value.trim())return showMessage('Pallet No. required.','error');
+      if(!receivingDate.value)return showMessage('Receiving Date required.','error');
+      if(!engineer.value.trim())return showMessage('Engineer name required.','error');
 
-      // disable UI
-      addRowBtn.disabled = true;
-      removeLastBtn.disabled = true;
-      const submitBtn = damageForm.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
       showMessage(`Submitting ${rows.length} row(s)...`);
-
-      let successCount = 0;
-      let failed = [];
-
-      for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        const body = new URLSearchParams({
-          serial: row.serial,
-          pallet: palletNo.value.trim(),       // keep the same parameter names expected by backend
-          damage: row.damage,
-          receivingDate: receivingDate.value,
-          engineer: engineer.value.trim(),
-          site: row.site
+      let success=0;
+      for(const r of rows){
+        const body=new URLSearchParams({
+          serial:r.serial,pallet:palletNo.value,damage:r.damage,
+          receivingDate:receivingDate.value,engineer:engineer.value,site
         }).toString();
-
-        try {
-          const res = await fetch(POST_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-            body: body,
-            mode: 'cors'
-          });
-          let result;
-          try { result = await res.json(); } catch(e) { result = { status: res.ok ? 'success' : 'error', message: 'Non-JSON response' }; }
-
-          if (res.ok && result && result.status === 'success') {
-            successCount++;
-            showMessage(`Saved ${successCount}/${rows.length}...`);
-          } else {
-            const m = result && result.message ? result.message : `HTTP ${res.status}`;
-            failed.push({ index: i+1, reason: m });
-            console.error('Row failed:', i+1, m);
-          }
-        } catch (err) {
-          failed.push({ index: i+1, reason: err.message });
-        }
+        try{
+          const res=await fetch(POST_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
+          const data=await res.json();
+          if(data.status==='success')success++;
+        }catch(err){console.error(err);}
       }
-
-      if (failed.length === 0) {
-        showMessage(`✅ All ${successCount} row(s) saved successfully!`, 'success');
-        // optionally clear saved state but keep the values visible — user asked that rows not be removed automatically, so we keep them.
-        // If you prefer to clear rows after successful submit, uncomment the two lines below:
-        // rowsList.innerHTML = ''; createRow();
-        // clearState();
-      } else {
-        showMessage(`⚠️ ${successCount} saved, ${failed.length} failed. First error: ${failed[0].reason}`, 'error');
-      }
-
-      // re-enable UI
-      addRowBtn.disabled = rowsList.children.length >= 10;
-      removeLastBtn.disabled = rowsList.children.length === 0;
-      submitBtn.disabled = false;
-    });
-
-    // ensure form state is saved before leaving
-    window.addEventListener('beforeunload', saveState);
-
+      showMessage(`✅ ${success}/${rows.length} rows saved.`, 'success');
+    };
   </script>
 </body>
 </html>
