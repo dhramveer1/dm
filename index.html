@@ -3,190 +3,416 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Damage Module Entry</title>
+  <title>Damage Module Entry (Multi-row)</title>
   <style>
     :root{
       --bg:#f6f8fa;
       --card:#ffffff;
       --accent:#0b63d6;
+      --accent-2:#0849a3;
       --muted:#6b7280;
       --success:#059669;
       --danger:#dc2626;
-      --radius:10px;
-      --shadow:0 6px 18px rgba(15,23,42,0.08);
+      --radius:12px;
+      --shadow: 0 8px 30px rgba(15,23,42,0.06);
+      --gap:12px;
     }
+    *{box-sizing:border-box}
     body{
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg,#f3f6fb 0%,var(--bg) 100%);
+      background: linear-gradient(180deg,#eef6ff 0%,var(--bg) 100%);
       margin:0;
       padding:28px;
       color:#0f172a;
     }
     .container{
-      max-width:1000px;
+      max-width:1100px;
       margin:0 auto;
+      padding:6px;
     }
     .card{
       background:var(--card);
       border-radius:var(--radius);
       padding:20px;
       box-shadow:var(--shadow);
+      border:1px solid rgba(11,99,214,0.06);
     }
-    h1{
-      margin:0 0 12px 0;
-      font-size:22px;
+    header.top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:12px;
+    }
+    header.top h1{
+      margin:0;
+      font-size:20px;
       letter-spacing:0.2px;
     }
-    p.sub{
-      margin:0 0 18px 0;
+    header.top p.sub{
+      margin:0;
       color:var(--muted);
       font-size:13px;
     }
-    .grid{
+    .rows-area{
+      margin-top:10px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    /* single row card */
+    .row-card{
+      background: linear-gradient(180deg,#ffffff,#fbfdff);
+      border-radius:10px;
+      padding:12px;
       display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap:12px;
+      grid-template-columns: 1.2fr 1fr 1.2fr 1fr 1fr 48px;
+      gap:var(--gap);
+      align-items:start;
+      border:1px solid #eef2ff;
     }
-    label{
-      font-size:13px;
-      color:var(--muted);
-      display:block;
-      margin-bottom:4px;
+    @media (max-width:980px){
+      .row-card{ grid-template-columns: 1fr 1fr; }
+      .row-card > .col-site { order:3; }
+      .row-card > .col-engineer { order:4; }
+      .row-card > .col-actions { order:6; grid-column: 1 / -1; justify-self:end; }
     }
-    input, textarea{
+    @media (max-width:520px){
+      .row-card{ grid-template-columns: 1fr; }
+      .row-card > .col-actions { justify-self:end; }
+    }
+
+    label{ font-size:12px; color:var(--muted); display:block; margin-bottom:6px; }
+    input[type="text"], input[type="date"], select, textarea{
       width:100%;
-      box-sizing:border-box;
-      padding:10px 12px;
+      padding:9px 10px;
       border-radius:8px;
       border:1px solid #e6e9ef;
       font-size:14px;
-      outline:none;
       background:#fff;
     }
-    textarea{ resize:vertical; min-height:38px; }
-    .row-actions{
-      margin-top:18px;
+    textarea{ min-height:46px; resize:vertical; }
+
+    .col-actions{
       display:flex;
-      gap:10px;
       align-items:center;
+      justify-content:center;
     }
-    button{
-      padding:10px 16px;
+    button.btn{
+      padding:8px 12px;
       border-radius:8px;
       border:0;
       cursor:pointer;
       font-weight:600;
+      font-size:13px;
     }
-    .btn-primary{ background:var(--accent); color:#fff; }
-    .btn-secondary{ background:#e5e7eb; color:#374151; }
-    .btn-success{ background:var(--success); color:white; }
-    .msg{ margin-top:12px; font-size:14px; }
-    .msg.success{ color:var(--success); }
-    .msg.error{ color:var(--danger); }
-    footer{
-      margin-top:12px;
-      text-align:right;
-      color:var(--muted);
-      font-size:12px;
+    .btn-add{ background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff; box-shadow: 0 8px 18px rgba(11,99,214,0.12); }
+    .btn-remove{ background:#fff; color:var(--danger); border:1px solid rgba(220,38,38,0.08); }
+    .row-footer{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-top:14px;
+    }
+    .actions-right{
+      margin-left:auto;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .submit-all{
+      background:var(--accent);
+      color:white;
+      padding:10px 14px;
+      border-radius:10px;
+      border:0;
+      font-weight:700;
+    }
+    .reset-all{
+      background:#e5e7eb;
+      color:#374151;
+      padding:9px 12px;
+      border-radius:10px;
+      border:0;
+      font-weight:600;
+    }
+
+    .msg{ margin-top:8px; font-size:14px; color:var(--muted); }
+    .msg.success{ color:var(--success); font-weight:600; }
+    .msg.error{ color:var(--danger); font-weight:600; }
+
+    footer.small{ margin-top:12px; font-size:12px; color:var(--muted); text-align:right; }
+    .pill { display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(11,99,214,0.08); color:var(--accent); font-weight:700; font-size:13px; }
+
+    /* small icon button */
+    .icon-btn{
+      width:36px;height:36px;border-radius:8px;border:0;background:#fff;display:inline-grid;place-items:center;cursor:pointer;
+      box-shadow: 0 6px 14px rgba(2,6,23,0.04);
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="card">
-      <h1>Damage Module Entry Form</h1>
-      <p class="sub">Fill in the damage details below — data will be written to your Google Sheet automatically.</p>
+      <header class="top">
+        <div>
+          <h1>Damage Module Entry — Multi-row</h1>
+          <p class="sub">Add one or more damaged modules. Each row will be saved as a separate entry in your Google Sheet.</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="pill">Sheet: DamageModules</span>
+        </div>
+      </header>
 
       <form id="damageForm">
-        <div class="grid">
-          <div>
-            <label for="serial">Module Serial No.</label>
-            <input type="text" id="serial" name="serial" placeholder="e.g. MOD-12345" required>
-          </div>
-          <div>
-            <label for="pallet">Pallet No.</label>
-            <input type="text" id="pallet" name="pallet" placeholder="e.g. P-01" required>
-          </div>
-          <div>
-            <label for="damage">Damage (kya h)</label>
-            <textarea id="damage" name="damage" placeholder="Describe the issue" required></textarea>
-          </div>
-          <div>
-            <label for="receivingDate">Receiving Date</label>
-            <input type="date" id="receivingDate" name="receivingDate" required>
-          </div>
-          <div>
-            <label for="engineer">Site Engineer Name</label>
-            <input type="text" id="engineer" name="engineer" placeholder="e.g. Rajesh Kumar" required>
-          </div>
+        <div class="rows-area" id="rowsArea">
+          <!-- rows inserted here -->
         </div>
 
-        <div class="row-actions">
-          <button type="submit" class="btn-primary" id="submitBtn">Submit</button>
-          <button type="reset" class="btn-secondary">Clear</button>
-          <button type="button" class="btn-success" id="addMoreBtn" style="display:none">Add More Modules</button>
+        <div class="row-footer">
+          <button type="button" id="addRowBtn" class="btn btn-add">+ Add Row</button>
+
+          <div class="actions-right">
+            <button type="reset" id="resetBtn" class="reset-all">Reset All</button>
+            <button type="submit" id="submitAllBtn" class="submit-all">Save All to Sheet</button>
+          </div>
         </div>
 
         <div id="message" class="msg"></div>
       </form>
 
-      <footer>Powered by Google Apps Script + Sheets</footer>
+      <footer class="small">Powered by Google Apps Script + Sheets — Site options restricted to provided list.</footer>
     </div>
   </div>
 
   <script>
-    // 🔗 Replace this with your Google Apps Script Web App URL
+    // -------------------------
+    // CONFIG: replace if needed
+    // -------------------------
     const POST_URL = "https://script.google.com/macros/s/AKfycbzA4srMQGjKy3aefxdq6nXzCnypuG9AdXAVZdmoT5cA7eoIloiS8SerpGmAxuVbmgBDxA/exec";
+    // site options required (only these names will be allowed in dropdown)
+    const SITE_OPTIONS = ["MALSAR","BHOJASAR","GIRGHICHIYA","SUMERIYA","BILLYUBAS","SAWAR","NETHRANA"];
 
-    const form = document.getElementById('damageForm');
-    const msg = document.getElementById('message');
-    const submitBtn = document.getElementById('submitBtn');
-    const addMoreBtn = document.getElementById('addMoreBtn');
+    // -------------------------
+    // helper to create a row
+    // -------------------------
+    const rowsArea = document.getElementById('rowsArea');
+    const addRowBtn = document.getElementById('addRowBtn');
+    const submitAllBtn = document.getElementById('submitAllBtn');
+    const messageEl = document.getElementById('message');
+    const resetBtn = document.getElementById('resetBtn');
+    let rowIdCounter = 0;
 
-    function showMsg(text, type){
-      msg.textContent = text;
-      msg.className = 'msg ' + type;
+    function createRow(initialData = {}) {
+      rowIdCounter++;
+      const id = `row-${rowIdCounter}`;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'row-card';
+      wrapper.dataset.id = id;
+
+      // inner HTML with columns
+      wrapper.innerHTML = `
+        <div class="col-serial">
+          <label>Module Serial No.</label>
+          <input type="text" name="serial" class="input-serial" placeholder="MOD-12345" required value="${escapeHtml(initialData.serial||'')}">
+        </div>
+        <div class="col-pallet">
+          <label>Pallet No.</label>
+          <input type="text" name="pallet" class="input-pallet" placeholder="P-01" required value="${escapeHtml(initialData.pallet||'')}">
+        </div>
+        <div class="col-damage">
+          <label>Damage (kya h)</label>
+          <textarea name="damage" class="input-damage" placeholder="Short description" required>${escapeHtml(initialData.damage||'')}</textarea>
+        </div>
+        <div class="col-date">
+          <label>Receiving Date</label>
+          <input type="date" name="receivingDate" class="input-date" required value="${escapeHtml(initialData.receivingDate||'')}">
+        </div>
+        <div class="col-engineer">
+          <label>Site Engineer Name</label>
+          <input type="text" name="engineer" class="input-engineer" placeholder="e.g. Rajesh Kumar" required value="${escapeHtml(initialData.engineer||'')}">
+        </div>
+        <div class="col-site">
+          <label>Site</label>
+          <select name="site" class="input-site" required>
+            ${SITE_OPTIONS.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+          </select>
+        </div>
+        <div class="col-actions" style="grid-column: 7 / 8;">
+          <button type="button" class="icon-btn btn-remove-row" title="Remove row">🗑️</button>
+        </div>
+      `;
+
+      // set site selection if provided
+      if (initialData.site) {
+        const sel = wrapper.querySelector('.input-site');
+        if (SITE_OPTIONS.includes(initialData.site.toUpperCase())) sel.value = initialData.site.toUpperCase();
+      }
+
+      // hook up remove
+      wrapper.querySelector('.btn-remove-row').addEventListener('click', () => {
+        wrapper.remove();
+      });
+
+      rowsArea.appendChild(wrapper);
+      return wrapper;
     }
 
-    form.addEventListener('submit', async (e) => {
+    // utility - escape HTML for values
+    function escapeHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
+
+    // Add initial single row to begin
+    createRow();
+
+    addRowBtn.addEventListener('click', () => {
+      createRow();
+      showMessage('', '');
+      // scroll to last row
+      const last = rowsArea.lastElementChild;
+      last.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+
+    // Reset behavior: remove all rows and add one blank row
+    resetBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      showMsg('');
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Saving...";
+      rowsArea.innerHTML = '';
+      createRow();
+      showMessage('', '');
+    });
 
-      const formData = new URLSearchParams(new FormData(form)).toString();
+    // show messages
+    function showMessage(text, type='') {
+      messageEl.textContent = text;
+      messageEl.className = 'msg ' + (type || '');
+    }
 
-      try {
-        const res = await fetch(POST_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: formData
-        });
+    // validate each row inputs
+    function collectRows() {
+      const rows = Array.from(rowsArea.children);
+      const payloads = [];
+      for (const r of rows) {
+        const serial = r.querySelector('.input-serial').value.trim();
+        const pallet = r.querySelector('.input-pallet').value.trim();
+        const damage = r.querySelector('.input-damage').value.trim();
+        const receivingDate = r.querySelector('.input-date').value;
+        const engineer = r.querySelector('.input-engineer').value.trim();
+        const site = r.querySelector('.input-site').value;
 
-        const json = await res.json();
-        if(json.status === "success"){
-          showMsg("✅ Data saved successfully!", "success");
-          Array.from(form.elements).forEach(el => el.disabled = true);
-          submitBtn.style.display = "none";
-          addMoreBtn.style.display = "inline-block";
-        } else {
-          showMsg("⚠️ Error: " + (json.message || "Unknown error"), "error");
+        // basic validation
+        if (!serial || !pallet || !damage || !receivingDate || !engineer || !site) {
+          return { error: 'Please fill all fields for every row. Receiving date is required.' };
         }
-      } catch (err){
-        showMsg("❌ Network error: " + err.message, "error");
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Submit";
+        // enforce allowed site values (defensive)
+        if (!SITE_OPTIONS.includes(site)) {
+          return { error: `Invalid site chosen: ${site}` };
+        }
+        payloads.push({ serial, pallet, damage, receivingDate, engineer, site });
+      }
+      return { payloads };
+    }
+
+    // submit rows one by one to the Apps Script (keeps backend unchanged)
+    async function submitAll(event) {
+      event.preventDefault();
+      showMessage('', '');
+      const collected = collectRows();
+      if (collected.error) {
+        showMessage(collected.error, 'error');
+        return;
+      }
+      const rows = collected.payloads;
+      if (!rows.length) {
+        showMessage('Add at least one row before submitting.', 'error');
+        return;
+      }
+
+      // disable UI
+      toggleForm(false);
+      showMessage(`Submitting ${rows.length} row(s)...`, '');
+
+      let successCount = 0;
+      let failed = [];
+
+      // sequential submit to avoid quota spikes and to make debugging easier
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        // prepare form-encoded body to match Apps Script expectations
+        const body = new URLSearchParams({
+          serial: row.serial,
+          pallet: row.pallet,
+          damage: row.damage,
+          receivingDate: row.receivingDate,
+          engineer: row.engineer,
+          // we include site as extra field - backend will ignore/accept it if configured.
+          site: row.site
+        }).toString();
+
+        try {
+          const res = await fetch(POST_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+            body: body,
+            mode: 'cors'
+          });
+
+          // try to parse JSON; handle non-JSON gracefully
+          let result = null;
+          try { result = await res.json(); } catch (e) { result = { status: 'error', message: 'Non-JSON response' }; }
+
+          if (res.ok && result && result.status === 'success') {
+            successCount++;
+            showMessage(`Saved ${successCount}/${rows.length}...`, ''); // live update
+          } else {
+            const msg = result && result.message ? result.message : `HTTP ${res.status}`;
+            failed.push({ index: i+1, reason: msg });
+          }
+        } catch (err) {
+          failed.push({ index: i+1, reason: err.message });
+        }
+      }
+
+      // finish
+      if (failed.length === 0) {
+        showMessage(`✅ All ${successCount} row(s) saved successfully!`, 'success');
+        // disable all inputs to avoid duplicate sends, show Add Row to allow new entries
+        Array.from(rowsArea.querySelectorAll('input,textarea,select,button')).forEach(el => el.disabled = true);
+        addRowBtn.style.display = 'inline-block';
+      } else {
+        showMessage(`⚠️ ${successCount} saved, ${failed.length} failed. First error: ${failed[0].reason}`, 'error');
+        console.error('Failed rows:', failed);
+      }
+
+      toggleForm(true);
+    }
+
+    // toggle submit button and add button
+    function toggleForm(enabled) {
+      submitAllBtn.disabled = !enabled;
+      addRowBtn.disabled = !enabled;
+      resetBtn.disabled = !enabled;
+      // disable remove icons while submitting
+      Array.from(document.querySelectorAll('.btn-remove-row')).forEach(b => b.disabled = !enabled);
+    }
+
+    document.getElementById('damageForm').addEventListener('submit', submitAll);
+
+    // Prevent accidental form submit on Enter inside inputs (makes row adding easier)
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' && e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+        if (e.target.tagName === 'INPUT' && e.target.type === 'text') {
+          // allow enter for convenience only when not inside a textarea and not holding SHIFT
+          // but prevent default to avoid accidental submit
+          e.preventDefault();
+          return false;
+        }
       }
     });
 
-    addMoreBtn.addEventListener('click', () => {
-      Array.from(form.elements).forEach(el => el.disabled = false);
-      form.reset();
-      showMsg('');
-      submitBtn.style.display = "inline-block";
-      addMoreBtn.style.display = "none";
-    });
   </script>
 </body>
 </html>
