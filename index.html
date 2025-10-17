@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Damage Module Entry (Multi-row)</title>
+  <title>Damage Module Receipt</title>
   <style>
     :root{
       --bg:#f6f8fa;
       --card:#ffffff;
-      --accent:#0b63d6;
-      --accent-2:#0849a3;
+      --accent:#4863f8;
+      --accent-2:#8b5cf6;
       --muted:#6b7280;
       --success:#059669;
       --danger:#dc2626;
@@ -20,388 +20,432 @@
     *{box-sizing:border-box}
     body{
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg,#eef6ff 0%,var(--bg) 100%);
+      background: linear-gradient(180deg,#f1f6ff 0%,var(--bg) 100%);
       margin:0;
       padding:28px;
       color:#0f172a;
     }
     .container{
-      max-width:1100px;
+      max-width:980px;
       margin:0 auto;
       padding:6px;
     }
     .card{
       background:var(--card);
-      border-radius:var(--radius);
-      padding:20px;
+      border-radius:14px;
+      padding:22px;
       box-shadow:var(--shadow);
-      border:1px solid rgba(11,99,214,0.06);
+      border:1px solid rgba(11,99,214,0.04);
     }
-    /* header centered */
-    header.top{
+
+    .header{
       display:flex;
+      gap:14px;
       align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      gap:8px;
-      margin-bottom:14px;
     }
-    header.top h1{
-      margin:0;
-      font-size:20px;
-      letter-spacing:0.2px;
-      text-align:center;
+    .logo{
+      width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:800;
+      font-size:18px;
     }
-    header.top p.sub{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      text-align:center;
-    }
-    /* centered site selector under heading */
-    .center-site {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      margin-top:8px;
-    }
-    .center-site select{
-      padding:9px 12px;
-      border-radius:8px;
+    h1{ margin:0; font-size:18px; }
+    p.lead { margin:6px 0 0 0; color:var(--muted); font-size:13px; }
+
+    /* main form layout */
+    .section{ margin-top:18px; }
+    label{ font-size:13px; color:var(--accent); font-weight:700; display:block; margin-bottom:8px; }
+    .hint { font-size:13px; color:var(--muted); margin-top:6px; }
+
+    select, input[type="text"], input[type="date"], textarea {
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
       border:1px solid #e6e9ef;
       font-size:14px;
       background:#fff;
-      min-width:220px;
+      outline:none;
     }
+    textarea { min-height:86px; resize:vertical; }
 
-    .rows-area{
-      margin-top:14px;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-
-    /* single row card - new layout:
-       row top: serial | damage | remove
-       row bottom: pallet (left) with receiving date under pallet, engineer (middle)
-    */
-    .row-card{
-      background: linear-gradient(180deg,#ffffff,#fbfdff);
+    /* module serial area */
+    .module-area {
+      background:#fbfdff;
       border-radius:10px;
       padding:12px;
-      display:grid;
-      grid-template-columns: 1fr 2fr 48px;
-      grid-template-rows: auto auto;
-      gap:var(--gap);
-      align-items:start;
       border:1px solid #eef2ff;
     }
-
-    /* second row content spans multiple columns */
-    .col-serial { grid-column: 1 / 2; grid-row: 1 / 2; }
-    .col-damage { grid-column: 2 / 3; grid-row: 1 / 2; }
-    .col-actions { grid-column: 3 / 4; grid-row: 1 / 3; display:flex; align-items:center; justify-content:center; }
-    .col-pallet { grid-column: 1 / 2; grid-row: 2 / 3; }
-    .col-date { grid-column: 2 / 3; grid-row: 2 / 3; }
-    .col-engineer { grid-column: 2 / 3; grid-row: 2 / 3; display:none; } /* keep but hide to match previous layout (JS expects input-engineer) */
-
-    @media (max-width:980px){
-      .row-card{ grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
-      .col-actions { grid-column: 1 / -1; justify-self:end; }
-      .col-damage { grid-column: 1 / -1; }
-      .col-date { grid-column: 1 / -1; }
-      .col-pallet { grid-column: 1 / -1; }
-      .col-engineer { display:block; grid-column: 1 / -1; }
-    }
-
-    label{ font-size:12px; color:var(--muted); display:block; margin-bottom:6px; }
-    input[type="text"], input[type="date"], select, textarea{
-      width:100%;
-      padding:9px 10px;
-      border-radius:8px;
-      border:1px solid #e6e9ef;
-      font-size:14px;
-      background:#fff;
-    }
-    textarea{ min-height:46px; resize:vertical; }
-
-    .col-actions{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    button.btn{
-      padding:8px 12px;
-      border-radius:8px;
-      border:0;
-      cursor:pointer;
-      font-weight:600;
-      font-size:13px;
-    }
-    .btn-add{ background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff; box-shadow: 0 8px 18px rgba(11,99,214,0.12); }
-    .btn-remove{ background:#fff; color:var(--danger); border:1px solid rgba(220,38,38,0.08); }
-    .row-footer{
+    .module-controls{
       display:flex;
       gap:10px;
       align-items:center;
-      margin-top:14px;
+      justify-content:space-between;
+      margin-bottom:12px;
     }
-    .actions-right{
-      margin-left:auto;
+    .module-controls .left { display:flex; gap:8px; align-items:center; }
+    .btn {
+      padding:8px 12px; border-radius:10px; border:0; cursor:pointer; font-weight:700;
+    }
+    .btn-add { background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:white; }
+    .btn-remove { background:#fff; border:1px solid #e5e7eb; color:#374151; }
+    .btn-small { padding:6px 10px; border-radius:8px; font-weight:600; }
+
+    .rows-list { display:flex; flex-direction:column; gap:10px; }
+    .row-item {
       display:flex;
       gap:10px;
+      align-items:flex-start;
+      border-radius:10px;
+      padding:10px;
+      background:white;
+      border:1px solid #eef2ff;
+    }
+    .row-item input[type="text"], .row-item textarea { font-size:14px; }
+    .row-left { flex: 1 1 40%; display:flex; flex-direction:column; gap:6px; }
+    .row-mid  { flex: 1 1 50%; display:flex; flex-direction:column; gap:6px; }
+    .row-right { width:48px; display:flex; align-items:flex-start; justify-content:center; }
+
+    .row-count { color:var(--muted); font-size:13px; }
+
+    /* pallet/invoice/date/engineer grid */
+    .two-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px; }
+    @media (max-width:720px) { .two-grid { grid-template-columns: 1fr; } }
+
+    .actions {
+      display:flex;
+      gap:12px;
+      margin-top:18px;
       align-items:center;
     }
+    .submit { background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:white; padding:10px 16px; border-radius:10px; border:0; font-weight:700; }
+    .reset  { background:#fff; border:1px solid #e5e7eb; color:#374151; padding:9px 14px; border-radius:10px; font-weight:700; }
 
-    .submit-all{
-      background:var(--accent);
-      color:white;
-      padding:10px 14px;
-      border-radius:10px;
-      border:0;
-      font-weight:700;
-    }
-    .reset-all{
-      background:#e5e7eb;
-      color:#374151;
-      padding:9px 12px;
-      border-radius:10px;
-      border:0;
-      font-weight:600;
-    }
+    .msg{ margin-top:10px; font-size:14px; color:var(--muted); }
+    .msg.error{ color:var(--danger); font-weight:700; }
+    .msg.success{ color:var(--success); font-weight:700; }
 
-    .msg{ margin-top:8px; font-size:14px; color:var(--muted); }
-    .msg.success{ color:var(--success); font-weight:600; }
-    .msg.error{ color:var(--danger); font-weight:600; }
+    .footer-note { margin-top:14px; color:var(--muted); font-size:13px; }
 
-    footer.small{ margin-top:12px; font-size:12px; color:var(--muted); text-align:right; }
-    .pill { display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(11,99,214,0.08); color:var(--accent); font-weight:700; font-size:13px; }
-
-    /* small icon button */
-    .icon-btn{
-      width:36px;height:36px;border-radius:8px;border:0;background:#fff;display:inline-grid;place-items:center;cursor:pointer;
-      box-shadow: 0 6px 14px rgba(2,6,23,0.04);
-    }
-
-    /* slightly smaller paddings for cramped rows */
-    .row-card input, .row-card textarea, .row-card select { padding:8px; }
+    /* icon button */
+    .icon-btn{ width:38px;height:38px;border-radius:8px;border:0;background:#fff;display:inline-grid;place-items:center;cursor:pointer;box-shadow:0 6px 14px rgba(2,6,23,0.04); }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="card">
-      <header class="top">
-        <h1>Damage Module Data</h1>
-        <p class="sub">Add one or more damaged modules. Each row will be saved as a separate entry in your Google Sheet.</p>
-
-        <!-- Center site selector (this is a page-level helper - JS row-level still creates own select) -->
-        <div class="center-site" aria-hidden="true">
-          <label style="display:none">Site (page)</label>
-          <select disabled>
-            <option>Site selector (use per-row Site dropdown)</option>
-          </select>
+      <div class="header">
+        <div class="logo">DM</div>
+        <div>
+          <h1>Damage Module Receipt</h1>
+          <p class="lead">Record broken/damaged PV modules received on site</p>
         </div>
-      </header>
+      </div>
 
       <form id="damageForm">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-          <div style="color:var(--muted);font-size:14px">Sheet: <span class="pill">DamageModules</span></div>
+        <!-- 1) choose site -->
+        <div class="section">
+          <label>1) Choose Site (sheet)</label>
+          <select id="pageSite" aria-label="Choose site">
+            <!-- options filled by JS -->
+          </select>
+          <div class="hint">Choose the sheet name that corresponds to the site (the Google Sheet must have a tab with the same name). If tab does not exist, the script will create it automatically.</div>
+        </div>
+
+        <!-- 2) module serial numbers area -->
+        <div class="section module-area">
+          <div class="module-controls">
+            <div class="left">
+              <div style="font-weight:700;color:var(--accent)">2) Module serial numbers & reason (max 10 rows)</div>
+              <div class="row-count" id="rowCount">Rows: 0/10</div>
+            </div>
+            <div class="right">
+              <button type="button" id="addRowBtn" class="btn btn-add btn-small">+ Add row</button>
+              <button type="button" id="removeLastBtn" class="btn btn-remove btn-small">− Remove last</button>
+            </div>
+          </div>
+
+          <div class="rows-list" id="rowsList">
+            <!-- rows go here -->
+          </div>
+        </div>
+
+        <!-- 3) pallet no -->
+        <div class="section">
+          <label>3) Pallet No. (from which broken modules received)</label>
+          <input type="text" id="palletNo" name="pallet" placeholder="e.g. PLT-2025-001">
+        </div>
+
+        <!-- 4) invoice / challan -->
+        <div class="section">
+          <label>4) Invoice / Delivery Challan No. (pallet)</label>
+          <input type="text" id="invoiceNo" name="invoice" placeholder="e.g. INV-45987">
+        </div>
+
+        <!-- 5) date & inspector -->
+        <div class="section two-grid">
           <div>
-            <button type="button" id="addRowBtn" class="btn btn-add">+ Add Row</button>
+            <label>5) Date of received modules</label>
+            <input type="date" id="receivingDate" name="receivingDate">
+            <div class="hint">Select the exact date the pallet arrived on site.</div>
+          </div>
+          <div>
+            <label>Inspected by (site engineer)</label>
+            <input type="text" id="engineer" name="engineer" placeholder="Site Engineer name">
           </div>
         </div>
 
-        <div class="rows-area" id="rowsArea">
-          <!-- rows inserted here -->
+        <!-- notes -->
+        <div class="section">
+          <label>Additional notes (optional)</label>
+          <textarea id="notes" name="notes" placeholder="e.g. packaging damaged, photos attached, etc."></textarea>
         </div>
 
-        <div class="row-footer">
-          <div class="actions-right">
-            <button type="reset" id="resetBtn" class="reset-all">Reset All</button>
-            <button type="submit" id="submitAllBtn" class="submit-all">Save All to Sheet</button>
-          </div>
+        <div class="actions">
+          <button type="submit" class="submit">Submit to Sheet</button>
+          <button type="button" id="resetBtn" class="reset">Reset</button>
         </div>
 
         <div id="message" class="msg"></div>
+        <div class="footer-note">Powered by Google Apps Script + Sheets — per-row site restricted to provided list.</div>
       </form>
-
-      <footer class="small">Powered by Google Apps Script + Sheets — Site options restricted to provided list.</footer>
     </div>
   </div>
 
   <script>
     // -------------------------
-    // CONFIG: replace if needed
+    // IMPORTANT: kept these names & constants as-is
     // -------------------------
     const POST_URL = "https://script.google.com/macros/s/AKfycbzA4srMQGjKy3aefxdq6nXzCnypuG9AdXAVZdmoT5cA7eoIloiS8SerpGmAxuVbmgBDxA/exec";
-    // site options required (only these names will be allowed in dropdown)
-    const SITE_OPTIONS = ["MALSAR","BHOJASAR","GIRGHICHIYA","SUMERIYA","BILLYUBAS","SAWAR","NETHRANA"];
+    const SITE_OPTIONS = ["TOLASAR","MALSAR","BHOJASAR","GIRGHICHIYA","SUMERIYA","BILLYUBAS","SAWAR","NETHRANA"];
 
-    // -------------------------
-    // helper to create a row
-    // -------------------------
-    const rowsArea = document.getElementById('rowsArea');
+    // storage key (local)
+    const STORAGE_KEY = 'dm_rows_v1';
+
+    // elements
+    const pageSite = document.getElementById('pageSite');
+    const rowsList = document.getElementById('rowsList');
     const addRowBtn = document.getElementById('addRowBtn');
-    const submitAllBtn = document.getElementById('submitAllBtn');
+    const removeLastBtn = document.getElementById('removeLastBtn');
+    const rowCountEl = document.getElementById('rowCount');
+    const palletNo = document.getElementById('palletNo');
+    const invoiceNo = document.getElementById('invoiceNo');
+    const receivingDate = document.getElementById('receivingDate');
+    const engineer = document.getElementById('engineer');
+    const notes = document.getElementById('notes');
     const messageEl = document.getElementById('message');
     const resetBtn = document.getElementById('resetBtn');
-    let rowIdCounter = 0;
+    const damageForm = document.getElementById('damageForm');
 
-    function createRow(initialData = {}) {
-      rowIdCounter++;
-      const id = `row-${rowIdCounter}`;
+    // initialize site options
+    function fillSiteOptions() {
+      pageSite.innerHTML = SITE_OPTIONS.map(s => `<option value="${s}">${s[0].toUpperCase()+s.slice(1).toLowerCase()}</option>`).join('');
+    }
+    fillSiteOptions();
 
-      const wrapper = document.createElement('div');
-      wrapper.className = 'row-card';
-      wrapper.dataset.id = id;
+    // helpers for persistence
+    function saveState() {
+      const rowsData = Array.from(rowsList.children).map(node => {
+        return {
+          serial: node.querySelector('.input-serial').value.trim(),
+          damage: node.querySelector('.input-damage').value.trim(),
+          site: node.querySelector('.input-site').value
+        };
+      });
+      const payload = {
+        pageSite: pageSite.value,
+        rows: rowsData,
+        pallet: palletNo.value.trim(),
+        invoice: invoiceNo.value.trim(),
+        receivingDate: receivingDate.value,
+        engineer: engineer.value.trim(),
+        notes: notes.value.trim()
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      } catch (e) {
+        console.warn('Could not save to localStorage', e);
+      }
+    }
 
-      // inner HTML with new column order:
-      wrapper.innerHTML = `
-        <div class="col-serial">
-          <label>Module Serial No. <span style="color:var(--danger)">*</span></label>
-          <input type="text" name="serial" class="input-serial" placeholder="MOD-12345" required value="${escapeHtml(initialData.serial||'')}">
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) {
+        console.warn('Failed to parse saved state', e);
+        return null;
+      }
+    }
+
+    function clearState() {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+
+    // row management (max 10)
+    function updateRowCount() {
+      const c = rowsList.children.length;
+      rowCountEl.textContent = `Rows: ${c}/10`;
+      // disable add when 10
+      addRowBtn.disabled = c >= 10;
+      removeLastBtn.disabled = c === 0;
+    }
+
+    function createRow(initial = {}) {
+      if (rowsList.children.length >= 10) return null;
+      const item = document.createElement('div');
+      item.className = 'row-item';
+
+      item.innerHTML = `
+        <div class="row-left">
+          <label style="font-size:12px;color:var(--muted);font-weight:600">Module Serial No. <span style="color:var(--danger)">*</span></label>
+          <input type="text" name="serial" class="input-serial" placeholder="e.g. MOD-12345" required value="${escapeHtml(initial.serial||'')}">
         </div>
-
-        <div class="col-damage">
-          <label>Damage (kya h)</label>
-          <textarea name="damage" class="input-damage" placeholder="Short description" required>${escapeHtml(initialData.damage||'')}</textarea>
+        <div class="row-mid">
+          <label style="font-size:12px;color:var(--muted);font-weight:600">Damage / Reason</label>
+          <textarea name="damage" class="input-damage" placeholder="Short description" required>${escapeHtml(initial.damage||'')}</textarea>
+          <div style="margin-top:6px;display:flex;gap:8px;align-items:center;">
+            <label style="font-size:12px;color:var(--muted);margin:0">Site</label>
+            <select name="site" class="input-site" style="min-width:160px">
+              ${SITE_OPTIONS.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+            </select>
+          </div>
         </div>
-
-        <div class="col-actions" style="grid-column: 3 / 4;">
-          <button type="button" class="icon-btn btn-remove-row" title="Remove row">🗑️</button>
-        </div>
-
-        <div class="col-pallet">
-          <label>Pallet No.</label>
-          <input type="text" name="pallet" class="input-pallet" placeholder="P-01" required value="${escapeHtml(initialData.pallet||'')}">
-        </div>
-
-        <div class="col-date">
-          <label>Receiving Date</label>
-          <input type="date" name="receivingDate" class="input-date" required value="${escapeHtml(initialData.receivingDate||'')}">
-        </div>
-
-        <!-- kept but hidden (or shown on small screens) to keep original input-engineer presence expected by your JS -->
-        <div class="col-engineer" style="display:none">
-          <label>Site Engineer Name</label>
-          <input type="text" name="engineer" class="input-engineer" placeholder="e.g. Rajesh Kumar" required value="${escapeHtml(initialData.engineer||'')}">
-        </div>
-
-        <div style="display:none">
-          <!-- keep a per-row visible site select (but hidden in this layout because we show page-level site in header).
-               If you want each row to allow changing site, remove style="display:none" -->
-          <label style="display:none">Site</label>
-          <select name="site" class="input-site" required>
-            ${SITE_OPTIONS.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
-          </select>
+        <div class="row-right">
+          <button type="button" class="icon-btn btn-remove" title="Remove this row">🗑️</button>
         </div>
       `;
 
-      // set site selection if provided
-      if (initialData.site) {
-        const sel = wrapper.querySelector('.input-site');
-        if (sel && SITE_OPTIONS.includes(initialData.site.toUpperCase())) sel.value = initialData.site.toUpperCase();
-      }
+      // set site if provided
+      const sel = item.querySelector('.input-site');
+      if (initial.site && SITE_OPTIONS.includes(initial.site.toUpperCase())) sel.value = initial.site.toUpperCase();
 
-      // hook up remove
-      wrapper.querySelector('.btn-remove-row').addEventListener('click', () => {
-        wrapper.remove();
+      // hook events
+      item.querySelector('.btn-remove').addEventListener('click', () => {
+        item.remove();
+        updateRowCount();
+        saveState();
       });
+      // save when inputs change
+      item.querySelector('.input-serial').addEventListener('input', saveState);
+      item.querySelector('.input-damage').addEventListener('input', saveState);
+      sel.addEventListener('change', saveState);
 
-      rowsArea.appendChild(wrapper);
-      return wrapper;
+      rowsList.appendChild(item);
+      updateRowCount();
+      saveState();
+      return item;
     }
 
-    // utility - escape HTML for values
-    function escapeHtml(str) {
-      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    function removeLast() {
+      const last = rowsList.lastElementChild;
+      if (last) {
+        last.remove();
+        updateRowCount();
+        saveState();
+      }
     }
-
-    // Add initial single row to begin
-    createRow();
 
     addRowBtn.addEventListener('click', () => {
       createRow();
-      showMessage('', '');
-      const last = rowsArea.lastElementChild;
-      last.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+    removeLastBtn.addEventListener('click', () => {
+      removeLast();
     });
 
-    // Reset behavior: remove all rows and add one blank row
-    resetBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      rowsArea.innerHTML = '';
+    // helpers
+    function escapeHtml(str) {
+      return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
+
+    // load saved rows on start
+    (function initFromStorage(){
+      const state = loadState();
+      if (state) {
+        if (state.pageSite) pageSite.value = state.pageSite;
+        if (state.pallet) palletNo.value = state.pallet;
+        if (state.invoice) invoiceNo.value = state.invoice;
+        if (state.receivingDate) receivingDate.value = state.receivingDate;
+        if (state.engineer) engineer.value = state.engineer;
+        if (state.notes) notes.value = state.notes;
+        if (Array.isArray(state.rows) && state.rows.length) {
+          for (const r of state.rows.slice(0,10)) createRow(r);
+        } else {
+          // at least one blank row should exist
+          createRow();
+        }
+      } else {
+        createRow();
+      }
+    })();
+
+    // save page-level inputs periodically / on change
+    [pageSite, palletNo, invoiceNo, receivingDate, engineer, notes].forEach(el => {
+      el.addEventListener('input', saveState);
+      el.addEventListener('change', saveState);
+    });
+
+    // Reset button behavior: clear form & local storage but keep one blank row
+    resetBtn.addEventListener('click', () => {
+      if (!confirm('Clear all saved rows and reset the form?')) return;
+      rowsList.innerHTML = '';
+      pageSite.selectedIndex = 0;
+      palletNo.value = '';
+      invoiceNo.value = '';
+      receivingDate.value = '';
+      engineer.value = '';
+      notes.value = '';
+      clearState();
       createRow();
       showMessage('', '');
     });
 
-    // show messages
-    function showMessage(text, type='') {
-      messageEl.textContent = text;
-      messageEl.className = 'msg ' + (type || '');
+    // message helper
+    function showMessage(txt, type='') {
+      messageEl.textContent = txt;
+      messageEl.className = type ? `msg ${type}` : 'msg';
     }
 
-    // validate each row inputs
-    function collectRows() {
-      const rows = Array.from(rowsArea.children);
-      const payloads = [];
-      for (const r of rows) {
-        const serial = r.querySelector('.input-serial').value.trim();
-        const pallet = r.querySelector('.input-pallet').value.trim();
-        const damage = r.querySelector('.input-damage').value.trim();
-        const receivingDate = r.querySelector('.input-date').value;
-        const engineerEl = r.querySelector('.input-engineer');
-        const engineer = engineerEl ? engineerEl.value.trim() : '';
-        const siteEl = r.querySelector('.input-site');
-        const site = siteEl ? siteEl.value : SITE_OPTIONS[0];
-
-        // basic validation
-        if (!serial || !pallet || !damage || !receivingDate || !engineer || !site) {
-          return { error: 'Please fill all fields for every row. Receiving date is required.' };
-        }
-        // enforce allowed site values (defensive)
-        if (!SITE_OPTIONS.includes(site)) {
-          return { error: `Invalid site chosen: ${site}` };
-        }
-        payloads.push({ serial, pallet, damage, receivingDate, engineer, site });
-      }
-      return { payloads };
-    }
-
-    // submit rows one by one to the Apps Script (keeps backend unchanged)
-    async function submitAll(event) {
-      event.preventDefault();
+    // Submit: send each row to POST_URL sequentially (keeps original payload fields)
+    damageForm.addEventListener('submit', async function(e){
+      e.preventDefault();
       showMessage('', '');
-      const collected = collectRows();
-      if (collected.error) {
-        showMessage(collected.error, 'error');
-        return;
+      // collect rows
+      const rows = Array.from(rowsList.children).map(node => {
+        return {
+          serial: node.querySelector('.input-serial').value.trim(),
+          damage: node.querySelector('.input-damage').value.trim(),
+          site: node.querySelector('.input-site').value
+        };
+      });
+
+      // basic validations
+      if (!rows.length) { showMessage('Add at least one module row before submitting.', 'error'); return; }
+      for (const r of rows) {
+        if (!r.serial || !r.damage) { showMessage('Please fill serial and damage for every row.', 'error'); return; }
+        if (!SITE_OPTIONS.includes(r.site)) { showMessage('Invalid site found in a row.', 'error'); return; }
       }
-      const rows = collected.payloads;
-      if (!rows.length) {
-        showMessage('Add at least one row before submitting.', 'error');
-        return;
-      }
+      // pallet/invoice/date/engineer validations (basic)
+      if (!palletNo.value.trim()) { showMessage('Pallet No. is required.', 'error'); return; }
+      if (!receivingDate.value) { showMessage('Receiving date is required.', 'error'); return; }
+      if (!engineer.value.trim()) { showMessage('Inspector name is required.', 'error'); return; }
 
       // disable UI
-      toggleForm(false);
-      showMessage(`Submitting ${rows.length} row(s)...`, '');
+      addRowBtn.disabled = true;
+      removeLastBtn.disabled = true;
+      const submitBtn = damageForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      showMessage(`Submitting ${rows.length} row(s)...`);
 
       let successCount = 0;
       let failed = [];
 
-      // sequential submit to avoid quota spikes and to make debugging easier
       for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
-        // prepare form-encoded body to match Apps Script expectations
         const body = new URLSearchParams({
           serial: row.serial,
-          pallet: row.pallet,
+          pallet: palletNo.value.trim(),       // keep the same parameter names expected by backend
           damage: row.damage,
-          receivingDate: row.receivingDate,
-          engineer: row.engineer,
-          // we include site as extra field - backend will ignore/accept it if configured.
+          receivingDate: receivingDate.value,
+          engineer: engineer.value.trim(),
           site: row.site
         }).toString();
 
@@ -412,59 +456,40 @@
             body: body,
             mode: 'cors'
           });
-
-          // try to parse JSON; handle non-JSON gracefully
-          let result = null;
-          try { result = await res.json(); } catch (e) { result = { status: 'error', message: 'Non-JSON response' }; }
+          let result;
+          try { result = await res.json(); } catch(e) { result = { status: res.ok ? 'success' : 'error', message: 'Non-JSON response' }; }
 
           if (res.ok && result && result.status === 'success') {
             successCount++;
-            showMessage(`Saved ${successCount}/${rows.length}...`, ''); // live update
+            showMessage(`Saved ${successCount}/${rows.length}...`);
           } else {
-            const msg = result && result.message ? result.message : `HTTP ${res.status}`;
-            failed.push({ index: i+1, reason: msg });
+            const m = result && result.message ? result.message : `HTTP ${res.status}`;
+            failed.push({ index: i+1, reason: m });
+            console.error('Row failed:', i+1, m);
           }
         } catch (err) {
           failed.push({ index: i+1, reason: err.message });
         }
       }
 
-      // finish
       if (failed.length === 0) {
         showMessage(`✅ All ${successCount} row(s) saved successfully!`, 'success');
-        // disable all inputs to avoid duplicate sends, show Add Row to allow new entries
-        Array.from(rowsArea.querySelectorAll('input,textarea,select,button')).forEach(el => el.disabled = true);
-        addRowBtn.style.display = 'inline-block';
+        // optionally clear saved state but keep the values visible — user asked that rows not be removed automatically, so we keep them.
+        // If you prefer to clear rows after successful submit, uncomment the two lines below:
+        // rowsList.innerHTML = ''; createRow();
+        // clearState();
       } else {
         showMessage(`⚠️ ${successCount} saved, ${failed.length} failed. First error: ${failed[0].reason}`, 'error');
-        console.error('Failed rows:', failed);
       }
 
-      toggleForm(true);
-    }
-
-    // toggle submit button and add button
-    function toggleForm(enabled) {
-      submitAllBtn.disabled = !enabled;
-      addRowBtn.disabled = !enabled;
-      resetBtn.disabled = !enabled;
-      // disable remove icons while submitting
-      Array.from(document.querySelectorAll('.btn-remove-row')).forEach(b => b.disabled = !enabled);
-    }
-
-    document.getElementById('damageForm').addEventListener('submit', submitAll);
-
-    // Prevent accidental form submit on Enter inside inputs (makes row adding easier)
-    document.addEventListener('keydown', function(e){
-      if (e.key === 'Enter' && e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
-        if (e.target.tagName === 'INPUT' && e.target.type === 'text') {
-          // allow enter for convenience only when not inside a textarea and not holding SHIFT
-          // but prevent default to avoid accidental submit
-          e.preventDefault();
-          return false;
-        }
-      }
+      // re-enable UI
+      addRowBtn.disabled = rowsList.children.length >= 10;
+      removeLastBtn.disabled = rowsList.children.length === 0;
+      submitBtn.disabled = false;
     });
+
+    // ensure form state is saved before leaving
+    window.addEventListener('beforeunload', saveState);
 
   </script>
 </body>
